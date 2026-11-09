@@ -1,0 +1,78 @@
+/* Simple reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px; /* Breathing room */
+}
+
+/* Form layout */
+header {
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 30px;
+}
+
+.weather-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#cityInput {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    width: 100%;
+}
+
+#searchBtn {
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+}
+
+/* Weather Card Layout */
+main {
+    width: 100%;
+    max-width: 450px;
+}
+
+.weatherContainer {
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#city-name {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.weatherContainer p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.status {
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+}
