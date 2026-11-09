@@ -107,3 +107,22 @@ main {
     color: #64748b;
     font-style: italic;
 }
+
+.weather-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.weather-icon svg {
+    width: 90px;
+    height: 90px;
+    stroke-width: 1.5;
+}
+
+#weather-description {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}

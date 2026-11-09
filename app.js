@@ -1,4 +1,3 @@
-
 /* DOM elements */
 const weatherform = document.querySelector(".weather-form");
 const cityInput = document.getElementById("cityInput");
@@ -7,10 +6,121 @@ const temperature = document.getElementById("temperature");
 const humidity = document.getElementById("humidity");
 const windSpeed = document.getElementById("wind-speed");
 const statusElement = document.getElementById("status");
+const weatherIcon = document.getElementById("weather-icon");
+const weatherDescription = document.getElementById("weather-description");
+const searchBtn = document.getElementById("searchBtn");
+
+/* Function to get weather information */
+const getWeatherInfo = (weatherCode, isDay) => {
+  switch (weatherCode) {
+    case 0:
+      return {
+        description: "Clear sky",
+        icon: isDay ? "sun" : "moon",
+      };
+
+    case 1:
+      return {
+        description: "Mainly clear",
+        icon: isDay ? "sun" : "moon",
+      };
+
+    case 2:
+      return {
+        description: "Partly cloudy",
+        icon: isDay ? "cloud-sun" : "cloud-moon",
+      };
+
+    case 3:
+      return {
+        description: "Overcast",
+        icon: "cloud",
+      };
+
+    case 45:
+    case 48:
+      return {
+        description: "Fog",
+        icon: "cloud-fog",
+      };
+
+    case 51:
+    case 53:
+    case 55:
+      return {
+        description: "Drizzle",
+        icon: "cloud-drizzle",
+      };
+
+    case 56:
+    case 57:
+      return {
+        description: "Freezing drizzle",
+        icon: "cloud-snow",
+      };
+
+    case 61:
+    case 63:
+    case 65:
+      return {
+        description: "Rain",
+        icon: "cloud-rain",
+      };
+
+    case 66:
+    case 67:
+      return {
+        description: "Freezing rain",
+        icon: "cloud-rain",
+      };
+
+    case 71:
+    case 73:
+    case 75:
+    case 77:
+      return {
+        description: "Snow",
+        icon: "cloud-snow",
+      };
+
+    case 80:
+    case 81:
+    case 82:
+      return {
+        description: "Rain showers",
+        icon: "cloud-rain",
+      };
+
+    case 85:
+    case 86:
+      return {
+        description: "Snow showers",
+        icon: "cloud-snow",
+      };
+
+    case 95:
+    case 96:
+    case 99:
+      return {
+        description: "Thunderstorm",
+        icon: "cloud-lightning",
+      };
+
+    default:
+      return {
+        description: "Unknown weather condition",
+        icon: "cloud",
+      };
+  }
+};
 
 /* Function to fetch weather data */
 const getWeather = async (city) => {
   try {
+    statusElement.textContent = "Loading weather data...";
+    searchBtn.disabled = true;
+    searchBtn.textContent = "Loading...";
+
     const params = new URLSearchParams({
       name: city,
       count: "1",
@@ -19,6 +129,7 @@ const getWeather = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?${params}`;
 
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -38,20 +149,17 @@ const getWeather = async (city) => {
     const lat = location.latitude;
     const lon = location.longitude;
 
-    console.log("City:", resolvedCity);
-    console.log("Country:", country);
-    console.log("Latitude:", lat);
-    console.log("Longitude:", lon);
-
     const params2 = new URLSearchParams({
       latitude: lat,
       longitude: lon,
-      current: "temperature_2m,relative_humidity_2m,wind_speed_10m",
+      current:
+        "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,is_day",
     });
 
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?${params2}`;
 
     const weatherResponse = await fetch(weatherUrl);
+
     if (!weatherResponse.ok) {
       throw new Error("Weather response was not ok");
     }
@@ -62,18 +170,29 @@ const getWeather = async (city) => {
     const temperatureValue = currentWeather.temperature_2m;
     const humidityValue = currentWeather.relative_humidity_2m;
     const windSpeedValue = currentWeather.wind_speed_10m;
+    const weatherCode = currentWeather.weather_code;
+    const isDay = currentWeather.is_day;
 
-    console.log("Temperature:", temperatureValue);
-    console.log("Humidity:", humidityValue);
-    console.log("Wind Speed:", windSpeedValue);
+    /* Get weather description and icon */
+    const weatherInfo = getWeatherInfo(weatherCode, isDay);
 
+    /* Update the interface */
     cityName.textContent = `${resolvedCity}, ${country}`;
     temperature.textContent = `Temperature: ${temperatureValue} °C`;
     humidity.textContent = `Humidity: ${humidityValue} %`;
     windSpeed.textContent = `Wind Speed: ${windSpeedValue} km/h`;
 
+    weatherDescription.textContent = weatherInfo.description;
+    weatherIcon.innerHTML = `<i data-lucide="${weatherInfo.icon}"></i>`;
+
+    lucide.createIcons();
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
+    statusElement.textContent =
+      "Unable to retrieve weather data. Please try again.";
+  } finally {
+    searchBtn.disabled = false;
+    searchBtn.textContent = "Search";
   }
 };
 
