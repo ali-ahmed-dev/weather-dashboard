@@ -6,12 +6,14 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
     padding: 40px 20px; /* Breathing room */
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    color: #333;
 }
 
 /* Form layout */
@@ -37,6 +39,16 @@ label {
     font-size: 16px;
     border-radius: 6px;
     width: 100%;
+    border: 1px solid #cbd5e1;
+    background-color: #fff;
+    color: #1e293b;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#cityInput:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* Soft focus ring */
 }
 
 #searchBtn {
@@ -46,6 +58,17 @@ label {
     border-radius: 6px;
     border: none;
     font-weight: 600;
+    background-color: #2563eb; /* Strong blue */
+    color: #fff;
+    transition: background-color 0.2s;
+}
+
+#searchBtn:hover {
+    background-color: #1d4ed8;
+}
+
+#searchBtn:active {
+    transform: scale(0.98); /* Tiny click effect */
 }
 
 /* Weather Card Layout */
@@ -59,20 +82,28 @@ main {
     border-radius: 10px;
     margin-bottom: 15px;
     text-align: center;
+    background-color: #ffffff;
+    /* Soft, human shadow - not too deep */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
 }
 
 #city-name {
     font-size: 24px;
     margin-bottom: 20px;
+    color: #1e293b;
 }
 
 .weatherContainer p {
     font-size: 16px;
     margin: 10px 0;
+    color: #475569;
 }
 
 .status {
     text-align: center;
     font-size: 14px;
     padding: 10px;
+    color: #64748b;
+    font-style: italic;
 }
