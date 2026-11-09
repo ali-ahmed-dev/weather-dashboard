@@ -9,6 +9,7 @@ const statusElement = document.getElementById("status");
 const weatherIcon = document.getElementById("weather-icon");
 const weatherDescription = document.getElementById("weather-description");
 const searchBtn = document.getElementById("searchBtn");
+let weatherController = null;
 
 /* Function to get weather information */
 const getWeatherInfo = (weatherCode, isDay) => {
@@ -117,9 +118,26 @@ const getWeatherInfo = (weatherCode, isDay) => {
 /* Function to fetch weather data */
 const getWeather = async (city) => {
   try {
+    // Cancel previous request
+    if (weatherController) {
+      weatherController.abort();
+    }
+
+    weatherController = new AbortController();
+    const currentController = weatherController;
+    // loading state
     statusElement.textContent = "Loading weather data...";
     searchBtn.disabled = true;
     searchBtn.textContent = "Loading...";
+
+    /* Clear previous weather data */
+    cityName.textContent = "—";
+    temperature.textContent = "Temperature: —";
+    humidity.textContent = "Humidity: —";
+    windSpeed.textContent = "Wind Speed: —";
+
+    weatherDescription.textContent = "";
+    weatherIcon.innerHTML = "";
 
     const params = new URLSearchParams({
       name: city,
@@ -128,7 +146,9 @@ const getWeather = async (city) => {
 
     const url = `https://geocoding-api.open-meteo.com/v1/search?${params}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      signal: currentController.signal,
+    });
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -158,7 +178,9 @@ const getWeather = async (city) => {
 
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?${params2}`;
 
-    const weatherResponse = await fetch(weatherUrl);
+    const weatherResponse = await fetch(weatherUrl, {
+      signal: currentController.signal,
+    });
 
     if (!weatherResponse.ok) {
       throw new Error("Weather response was not ok");
@@ -187,12 +209,18 @@ const getWeather = async (city) => {
 
     lucide.createIcons();
   } catch (error) {
+    if (error.name === "AbortError") {
+      return;
+    }
+
     console.error("There was a problem with the fetch operation:", error);
     statusElement.textContent =
       "Unable to retrieve weather data. Please try again.";
   } finally {
-    searchBtn.disabled = false;
-    searchBtn.textContent = "Search";
+    if (weatherController === currentController) {
+      searchBtn.disabled = false;
+      searchBtn.textContent = "Search";
+    }
   }
 };
 
