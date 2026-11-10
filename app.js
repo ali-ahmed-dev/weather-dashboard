@@ -1,3 +1,4 @@
+
 /* DOM elements */
 const weatherform = document.querySelector(".weather-form");
 const cityInput = document.getElementById("cityInput");
@@ -9,6 +10,7 @@ const statusElement = document.getElementById("status");
 const weatherIcon = document.getElementById("weather-icon");
 const weatherDescription = document.getElementById("weather-description");
 const searchBtn = document.getElementById("searchBtn");
+
 let weatherController = null;
 
 /* Function to get weather information */
@@ -117,6 +119,8 @@ const getWeatherInfo = (weatherCode, isDay) => {
 
 /* Function to fetch weather data */
 const getWeather = async (city) => {
+  let currentController = null;
+
   try {
     // Cancel previous request
     if (weatherController) {
@@ -124,13 +128,14 @@ const getWeather = async (city) => {
     }
 
     weatherController = new AbortController();
-    const currentController = weatherController;
-    // loading state
+    currentController = weatherController;
+
+    // Loading state
     statusElement.textContent = "Loading weather data...";
     searchBtn.disabled = true;
     searchBtn.textContent = "Loading...";
 
-    /* Clear previous weather data */
+    // Clear previous weather data
     cityName.textContent = "—";
     temperature.textContent = "Temperature: —";
     humidity.textContent = "Humidity: —";
@@ -161,8 +166,6 @@ const getWeather = async (city) => {
       return;
     }
 
-    statusElement.textContent = "";
-
     const location = data.results[0];
     const resolvedCity = location.name;
     const country = location.country_code;
@@ -188,6 +191,8 @@ const getWeather = async (city) => {
 
     const weatherData = await weatherResponse.json();
 
+statusElement.textContent = "";
+
     const currentWeather = weatherData.current;
     const temperatureValue = currentWeather.temperature_2m;
     const humidityValue = currentWeather.relative_humidity_2m;
@@ -195,10 +200,10 @@ const getWeather = async (city) => {
     const weatherCode = currentWeather.weather_code;
     const isDay = currentWeather.is_day;
 
-    /* Get weather description and icon */
+    // Get weather description and icon
     const weatherInfo = getWeatherInfo(weatherCode, isDay);
 
-    /* Update the interface */
+    // Update the interface
     cityName.textContent = `${resolvedCity}, ${country}`;
     temperature.textContent = `Temperature: ${temperatureValue} °C`;
     humidity.textContent = `Humidity: ${humidityValue} %`;
@@ -208,15 +213,19 @@ const getWeather = async (city) => {
     weatherIcon.innerHTML = `<i data-lucide="${weatherInfo.icon}"></i>`;
 
     lucide.createIcons();
+
   } catch (error) {
     if (error.name === "AbortError") {
       return;
     }
 
     console.error("There was a problem with the fetch operation:", error);
+
     statusElement.textContent =
       "Unable to retrieve weather data. Please try again.";
+
   } finally {
+    // Reset button only for the latest request
     if (weatherController === currentController) {
       searchBtn.disabled = false;
       searchBtn.textContent = "Search";
