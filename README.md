@@ -14,18 +14,19 @@ The project focuses on practical implementation of modern JavaScript concepts, i
 
 ![Weather Dashboard Preview](preview.png)
 
-## 📌 Features
+## Features
 
 - **City Search:** Search for cities using the Open-Meteo Geocoding API.
+- **City Autocomplete:** Display city suggestions while typing, using a debounced input handler.
 - **Current Weather:** Retrieve and display temperature, humidity, wind speed, and weather conditions.
 - **Dynamic Weather Icons:** Display weather-specific icons based on WMO weather codes and daylight conditions.
 - **Loading State:** Provide visual feedback while weather data is being retrieved.
 - **Input Validation:** Prevent empty search submissions.
 - **Error Handling:** Handle unsuccessful HTTP responses, network errors, and missing search results.
-- **Request Cancellation:** Use `AbortController` to cancel previous requests when a new search starts, preventing outdated requests from interfering with the latest search.
+- **Request Cancellation:** Use `AbortController` to cancel outdated requests and prevent previous requests from interfering with newer ones.
 - **Responsive Design:** Adapt the interface to different screen sizes.
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 | Technology | Usage |
 |---|---|
@@ -36,10 +37,11 @@ The project focuses on practical implementation of modern JavaScript concepts, i
 | Async/Await | Asynchronous operations |
 | URLSearchParams | Query string construction |
 | AbortController | Request cancellation |
+| Debounce | Control autocomplete request frequency |
 | Open-Meteo API | Geocoding and weather data |
 | Lucide Icons | Dynamic weather icons |
 
-## 🔗 API Integration
+## API Integration
 
 The application uses two Open-Meteo services:
 
@@ -56,10 +58,12 @@ The application requests the following weather parameters:
 
 No API key is required for non-commercial use.
 
-- [Open-Meteo Documentation](https://open-meteo.com/en/docs)
-- [Geocoding API](https://open-meteo.com/en/docs/geocoding-api)
+### API Documentation
 
-## 📁 Project Structure
+- [Open-Meteo Documentation](https://open-meteo.com/en/docs)
+- [Geocoding API Documentation](https://open-meteo.com/en/docs/geocoding-api)
+
+## Project Structure
 
 ```text
 weather-dashboard/
@@ -71,7 +75,7 @@ weather-dashboard/
 └── LICENSE
 ```
 
-## ▶️ Installation & Usage
+## Installation & Usage
 
 Clone the repository:
 
@@ -82,7 +86,7 @@ cd weather-dashboard
 
 Open `index.html` in your browser to run the application.
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
